@@ -27,7 +27,14 @@ namespace YPIConnect
         {
             this.m_AuthenticatedUser = AuthenticatedUser.Instance;
             InitializeComponent();
+            this.Loaded += LoginWindow_Loaded;
             this.DataContext = this;
+        }
+
+        private void LoginWindow_Loaded(object sender, RoutedEventArgs e)
+        {
+            this.PasswordBoxPassword.Password = this.m_AuthenticatedUser.Password;
+            this.TextBoxAuthenticatorToken.Focus();
         }
 
         public AuthenticatedUser AuthenticatedUser
@@ -36,28 +43,53 @@ namespace YPIConnect
         }
 
         private void ButtonLogin_Click(object sender, RoutedEventArgs e)
-        {            
-            if (string.IsNullOrEmpty(this.m_AuthenticatedUser.UserName) == false &&
+        {
+            this.DoAuthenticateUser();
+        }
+
+        private void DoAuthenticateUser()
+        {
+            if (string.IsNullOrEmpty(this.PasswordBoxPassword.Password) == false &&
                 string.IsNullOrEmpty(this.m_AuthenticatedUser.Password) == false &&
                 string.IsNullOrEmpty(this.m_AuthenticatedUser.AuthenticatorToken) == false)
             {
-                JObject apiRequest = APIRequestHelper.GetTokenMessage(this.m_AuthenticatedUser.UserName, this.m_AuthenticatedUser.Password, this.m_AuthenticatedUser.AuthenticatorToken);
-                JObject apiResponse = APIRequestHelper.SubmitAPIRequestMessage(apiRequest);
+                JObject apiRequest = APIRequestHelper.GetTokenMessage(this.m_AuthenticatedUser.UserName, this.PasswordBoxPassword.Password, this.m_AuthenticatedUser.AuthenticatorToken);
+                APIResult apiResponse = APIRequestHelper.SubmitAPIRequestMessage(apiRequest);
+                if (Convert.ToBoolean(apiResponse.JSONResult["result"]["isAuthenticated"].ToString()) == true)
+                {
+                    string tkn = apiResponse.JSONResult["result"]["token"].ToString();
 
-                string tkn = apiResponse["result"]["token"].ToString();
+                    this.m_AuthenticatedUser.WebServiceAccount = (JObject)apiResponse.JSONResult["result"]["webServiceAccount"];
+                    this.m_AuthenticatedUser.WebServiceAccountClient = (JArray)apiResponse.JSONResult["result"]["webServiceAccountClient"];
 
-                JwtSecurityToken token = new JwtSecurityToken(tkn);
-                JwtPayload payload = token.Payload;
+                    JwtSecurityToken token = new JwtSecurityToken(tkn);
+                    this.m_AuthenticatedUser.IsAuthenticated = true;
+                    this.m_AuthenticatedUser.Token = token;
 
-                LocalSettings.Instance.UpdateUserNamePassword(m_AuthenticatedUser);
-                LocalSettings.Instance.Serialize();
+                    LocalSettings.Instance.UpdateUserNamePassword(m_AuthenticatedUser);
+                    LocalSettings.Instance.Serialize();
 
-                //alxw6JEp
+                    this.Close();
+                }
+                else
+                {
+                    this.m_AuthenticatedUser.IsAuthenticated = true;
+                    MessageBox.Show("The Authenticator Token provided is not valid.");
+                }
             }
             else
             {
                 MessageBox.Show("The Username and Password cannot be blank.");
             }
+        }        
+
+        private void TextBoxAuthenticatorToken_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                this.DoAuthenticateUser();
+            }
         }
     }
 }
+//alxw6JEp

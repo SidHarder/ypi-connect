@@ -1,0 +1,250 @@
+﻿<UserControl x:Class="YPIConnect.OrderBrowserWorkspace"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:YPIConnect"
+             xmlns:Converter="clr-namespace:YPIConnect.Converter"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <Grid.Resources>
+            <Converter:MilitaryDateTimeConverter x:Key="MilitaryDateTimeConverter"/>
+            <Converter:ShortDateConverter x:Key="ShortDateConverter"/>
+        </Grid.Resources>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="2*"></ColumnDefinition>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+        </Grid.RowDefinitions>
+
+        <ToolBarTray Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0" Background="Gainsboro" Name="ToolBarTrayMain">
+            <ToolBar Name="ToolBarMain">
+                <Button Click="ToolBarButtonAddOrder_Click" Margin="2,2,2,2" Width="150">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Margin="2,0,0,0">Add COVID Order</TextBlock>
+                    </StackPanel>
+                </Button>
+                <Button Click="ToolBarButtonEdit_Click" Margin="2,2,2,2" Width="90">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Margin="2,0,0,0">Edit</TextBlock>
+                    </StackPanel>
+                </Button>
+            </ToolBar>
+        </ToolBarTray>
+
+        <TabControl Grid.Column="0" Grid.Row="1" Margin="2,2,2,2">
+            <TabItem Header="Order Date">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                        <ColumnDefinition Width="Auto"></ColumnDefinition>
+                        <ColumnDefinition Width="Auto"></ColumnDefinition>
+                        <ColumnDefinition Width="Auto"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <TextBox Grid.Column="0" HorizontalAlignment="Stretch" Text="{Binding Path=WorkDate, Converter={StaticResource ShortDateConverter}}" Margin="2,2,2,2"></TextBox>
+                    <Button Grid.Column="1" Width="50" Height="25" Click="ButtonBack_Click" Margin="2,2,2,2">&lt;</Button>
+                    <Button Grid.Column="2" Width="50" Height="25" Click="ButtonForward_Click" Margin="2,2,2,2">&gt;</Button>
+                    <Button Grid.Column="3" Width="50" Height="25" Click="ButtonRefresh_Click" Margin="2,2,2,2">Refresh</Button>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Patient Name">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                        <ColumnDefinition Width="Auto"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <TextBox Grid.Column="0" HorizontalAlignment="Stretch" Text="{Binding Path=PatientNameSearch, UpdateSourceTrigger=PropertyChanged}" Margin="2,2,2,2" KeyUp="TextBoxPatientNameSearch_KeyUp"></TextBox>
+                    <Button Grid.Column="1" Width="50" Height="25" Click="ButtonPatientNameSearch_Click" Margin="2,2,2,2">Search</Button>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Requisition Id">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                        <ColumnDefinition Width="Auto"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <TextBox Grid.Column="0" HorizontalAlignment="Stretch" Text="{Binding Path=RequisitionIdSearch, UpdateSourceTrigger=PropertyChanged}" KeyUp="TextBoxRequisitionIdSearch_KeyUp" Margin="2,2,2,2"></TextBox>
+                    <Button Grid.Column="1" Width="50" Height="25" Click="ButtonRequisitionIdSearch_Click" Margin="2,2,2,2">Search</Button>
+                </Grid>
+            </TabItem>
+        </TabControl>
+
+        <ListView Name="ListViewOrderLog" Margin="3" Grid.Column="0" Grid.Row="2" ItemsSource="{Binding Path=OrderLog}" SelectionChanged="ListViewOrderLog_SelectionChanged">
+            <ListView.View>
+                <GridView AllowsColumnReorder="True">
+                    <GridViewColumn Width="130" DisplayMemberBinding="{Binding Path=OrderDate, Converter={StaticResource MilitaryDateTimeConverter}}">
+                        <GridViewColumn.Header>
+                            <GridViewColumnHeader Tag="OrderDate" Click="ListViewAccessionLogColumnHeader_Click">OrderDate</GridViewColumnHeader>
+                        </GridViewColumn.Header>
+                    </GridViewColumn>
+
+                    <GridViewColumn Width="100" DisplayMemberBinding="{Binding Path=FirstName}">
+                        <GridViewColumn.Header>
+                            <GridViewColumnHeader Tag="FirstName" Click="ListViewAccessionLogColumnHeader_Click">First Name</GridViewColumnHeader>
+                        </GridViewColumn.Header>
+                    </GridViewColumn>
+
+                    <GridViewColumn Width="100" DisplayMemberBinding="{Binding Path=LastName}">
+                        <GridViewColumn.Header>
+                            <GridViewColumnHeader Tag="LastName" Click="ListViewAccessionLogColumnHeader_Click">Last Name</GridViewColumnHeader>
+                        </GridViewColumn.Header>
+                    </GridViewColumn>
+
+                    <GridViewColumn Width="200" DisplayMemberBinding="{Binding Path=TestName}">
+                        <GridViewColumn.Header>
+                            <GridViewColumnHeader Tag="TestName" Click="ListViewAccessionLogColumnHeader_Click">Test Name</GridViewColumnHeader>
+                        </GridViewColumn.Header>
+                    </GridViewColumn>
+
+                    <GridViewColumn Width="100" DisplayMemberBinding="{Binding Path=DateOfBirth, Converter={StaticResource ShortDateConverter}}">
+                        <GridViewColumn.Header>
+                            <GridViewColumnHeader Tag="DOB" Click="ListViewAccessionLogColumnHeader_Click">DOB</GridViewColumnHeader>
+                        </GridViewColumn.Header>
+                    </GridViewColumn>
+
+                    <GridViewColumn Width="200" DisplayMemberBinding="{Binding Path=ClientName}">
+                        <GridViewColumn.Header>
+                            <GridViewColumnHeader Tag="ClientName" Click="ListViewAccessionLogColumnHeader_Click">ClientName</GridViewColumnHeader>
+                        </GridViewColumn.Header>
+                    </GridViewColumn>
+
+                    <GridViewColumn Width="100" DisplayMemberBinding="{Binding Path=MasterAccessionNo}">
+                        <GridViewColumn.Header>
+                            <GridViewColumnHeader Tag="MasterAccessionNo" Click="ListViewAccessionLogColumnHeader_Click">Master Accession</GridViewColumnHeader>
+                        </GridViewColumn.Header>
+                    </GridViewColumn>
+                </GridView>
+            </ListView.View>
+        </ListView>
+
+        <TabControl Grid.Column="1" Grid.Row="1" Grid.RowSpan="2" Margin="2,2,2,2">
+            <TabItem Name="TabItemOrder" Header="Order">
+                <Grid Grid.Column="1" Grid.Row="1" Grid.RowSpan="2" Margin="2,2,2,2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Grid.Column="0" Grid.Row="0" Margin="2,2,2,2" VerticalAlignment="Bottom" HorizontalAlignment="Right">Client Order ID:</TextBlock>
+                    <TextBox Grid.Column="1" Grid.Row="0" Margin="2,2,2,2" VerticalAlignment="Stretch" Text="{Binding Path=ClientOrder.ClientOrderId}" IsEnabled="False"></TextBox>
+
+                    <TextBlock Grid.Column="0" Grid.Row="1" Margin="2,2,2,2" VerticalAlignment="Bottom" HorizontalAlignment="Right">Master Accession No:</TextBlock>
+                    <TextBox Grid.Column="1" Grid.Row="1" Margin="2,2,2,2" VerticalAlignment="Stretch" Text="{Binding Path=ClientOrder.MasterAccessionNo}" IsEnabled="False"></TextBox>
+
+                    <TextBlock Grid.Column="0" Grid.Row="2" Margin="3"  VerticalAlignment="Bottom" HorizontalAlignment="Right">Order Date:</TextBlock>
+                    <TextBox Grid.Column="1" Grid.Row="2" Margin="2,2,2,2" VerticalAlignment="Center" IsEnabled="False" Text="{Binding Path=ClientOrder.OrderDate, Converter={StaticResource MilitaryDateTimeConverter}}"></TextBox>
+
+                    <TextBlock Grid.Column="0" Grid.Row="3" Margin="3"  VerticalAlignment="Bottom" HorizontalAlignment="Right">Date Of Service:</TextBlock>
+                    <TextBox Grid.Column="1" Grid.Row="3" Margin="2,2,2,2" VerticalAlignment="Center" IsEnabled="False" Text="{Binding Path=ClientOrder.DateOfService, Converter={StaticResource MilitaryDateTimeConverter}}"></TextBox>
+
+                    <TextBlock Grid.Column="0" Grid.Row="4" Margin="3"  VerticalAlignment="Bottom" HorizontalAlignment="Right">Collection Date:</TextBlock>
+                    <TextBox Grid.Column="1" Grid.Row="4" Margin="2,2,2,2" VerticalAlignment="Center" IsEnabled="False" Text="{Binding Path=ClientOrder.CollectionDate, Converter={StaticResource MilitaryDateTimeConverter}}"></TextBox>
+
+                    <TextBlock Grid.Column="0" Grid.Row="5" Margin="2,2,2,2" VerticalAlignment="Bottom" HorizontalAlignment="Right">Requisition ID:</TextBlock>
+                    <TextBox Grid.Column="1" Grid.Row="5" Margin="2,2,2,2" VerticalAlignment="Stretch" Text="{Binding Path=ClientOrder.RequisitionId}" IsEnabled="False"></TextBox>
+
+                    <TextBlock Grid.Column="0" Grid.Row="6" Margin="2,2,2,2" VerticalAlignment="Bottom" HorizontalAlignment="Right">Ordered By:</TextBlock>
+                    <TextBox Grid.Column="1" Grid.Row="6" Margin="2,2,2,2" VerticalAlignment="Stretch" Text="{Binding Path=ClientOrder.OrderedByName}" IsEnabled="False"></TextBox>
+
+                    <TextBlock Grid.Column="0" Grid.Row="7" Margin="2,2,2,2" VerticalAlignment="Bottom" HorizontalAlignment="Right">Ordered By Id:</TextBlock>
+                    <TextBox Grid.Column="1" Grid.Row="7" Margin="2,2,2,2" VerticalAlignment="Stretch" Text="{Binding Path=ClientOrder.OrderedById}" IsEnabled="False"></TextBox>
+
+                    <TextBlock Grid.Column="0" Grid.Row="11" Margin="2,2,2,2" VerticalAlignment="Bottom" HorizontalAlignment="Right">Specimen Description:</TextBlock>
+                    <TextBox Grid.Column="1" Grid.Row="11" Margin="2,2,2,2" VerticalAlignment="Stretch"	Text="{Binding Path=ClientOrder.SpecimenDescription}" IsEnabled="True"></TextBox>
+
+                    <TextBlock Grid.Column="0" Grid.Row="12" Margin="2,2,2,2" VerticalAlignment="Bottom" HorizontalAlignment="Right">Test Name:</TextBlock>
+                    <TextBox Grid.Column="1" Grid.Row="12" Margin="2,2,2,2" VerticalAlignment="Stretch"	Text="{Binding Path=ClientOrder.TestName}" IsEnabled="False"></TextBox>
+
+                    <TextBlock Grid.Column="0" Grid.Row="13" Margin="2,2,2,2" VerticalAlignment="Bottom" HorizontalAlignment="Right">Test Id:</TextBlock>
+                    <TextBox Grid.Column="1" Grid.Row="13" Margin="2,2,2,2" VerticalAlignment="Stretch"	Text="{Binding Path=ClientOrder.TestId}" IsEnabled="False"></TextBox>
+                    
+                    <TextBlock Grid.Column="0" Grid.Row="15" Margin="2,2,2,2" VerticalAlignment="Bottom" HorizontalAlignment="Right">Phone:</TextBlock>
+                    <TextBox Grid.Column="1" Grid.Row="15" Margin="2,2,2,2" VerticalAlignment="Stretch"	Text="{Binding Path=ClientOrder.Phone}" IsEnabled="False"></TextBox>
+
+                    <TextBlock Grid.Column="0" Grid.Row="16" Margin="2,2,2,2" VerticalAlignment="Bottom" HorizontalAlignment="Right">Order Type:</TextBlock>
+                    <TextBox Grid.Column="1" Grid.Row="16" Margin="2,2,2,2" VerticalAlignment="Stretch"	Text="{Binding Path=ClientOrder.OrderType}" IsEnabled="False"></TextBox>
+
+                </Grid>
+            </TabItem>
+            <TabItem Header="Patient">
+                <Grid Grid.Column="1" Grid.Row="1" Grid.RowSpan="2" Margin="2,2,2,2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Grid.Column="0" Grid.Row="0" Margin="3"  VerticalAlignment="Bottom" HorizontalAlignment="Right">First Name:</TextBlock>
+                    <TextBox Grid.Column="1" Grid.Row="0" Margin="2,2,2,2" VerticalAlignment="Center" Text="{Binding Path=ClientOrder.FirstName}" IsEnabled="False"></TextBox>
+
+                    <TextBlock Grid.Column="0" Grid.Row="1" Margin="3" VerticalAlignment="Bottom" HorizontalAlignment="Right">Last Name:</TextBlock>
+                    <TextBox Grid.Column="1" Grid.Row="1" Margin="2,2,2,2" VerticalAlignment="Center" Text="{Binding Path=ClientOrder.LastName}" IsEnabled="False"></TextBox>
+
+                    <TextBlock Grid.Column="0" Grid.Row="2" Margin="3" VerticalAlignment="Bottom" HorizontalAlignment="Right">Middle Initial:</TextBlock>
+                    <TextBox Grid.Column="1" Grid.Row="2" Margin="2,2,2,2" VerticalAlignment="Center" Text="{Binding Path=ClientOrder.MiddleInitial}" IsEnabled="False"></TextBox>
+
+                    <TextBlock Grid.Column="0" Grid.Row="3" Margin="3" VerticalAlignment="Bottom" HorizontalAlignment="Right">Gender:</TextBlock>
+                    <TextBox Grid.Column="1" Grid.Row="3" Margin="2,2,2,2" VerticalAlignment="Center" Text="{Binding Path=ClientOrder.Gender}" IsEnabled="False"></TextBox>
+
+                    <TextBlock Grid.Column="0" Grid.Row="4" Margin="5" VerticalAlignment="Bottom" HorizontalAlignment="Right">DOB:</TextBlock>
+                    <TextBox Grid.Column="1" Grid.Row="4" Margin="2,2,2,2" VerticalAlignment="Center" Text="{Binding Path=ClientOrder.DateOfBirth, StringFormat={}{0:MM/dd/yyyy}}" IsEnabled="False"></TextBox>
+
+                    <TextBlock Grid.Column="0" Grid.Row="5" Margin="5" VerticalAlignment="Bottom" HorizontalAlignment="Right">Address Line 1:</TextBlock>
+                    <TextBox Grid.Column="1" Grid.Row="5" Margin="2,2,2,2" VerticalAlignment="Center" Text="{Binding Path=ClientOrder.AddressLine1}" IsEnabled="False"></TextBox>
+
+                    <TextBlock Grid.Column="0" Grid.Row="6" Margin="5" VerticalAlignment="Bottom" HorizontalAlignment="Right">Address Line 2:</TextBlock>
+                    <TextBox Grid.Column="1" Grid.Row="6" Margin="2,2,2,2" VerticalAlignment="Center" Text="{Binding Path=ClientOrder.AddressLine2}" IsEnabled="False"></TextBox>
+
+                    <TextBlock Grid.Column="0" Grid.Row="7" Margin="5" VerticalAlignment="Bottom" HorizontalAlignment="Right">City:</TextBlock>
+                    <TextBox Grid.Column="1" Grid.Row="7" Margin="2,2,2,2" VerticalAlignment="Center" Text="{Binding Path=ClientOrder.City}" IsEnabled="False"></TextBox>
+
+                    <TextBlock Grid.Column="0" Grid.Row="8" Margin="5" VerticalAlignment="Bottom" HorizontalAlignment="Right">State:</TextBlock>
+                    <TextBox Grid.Column="1" Grid.Row="8" Margin="2,2,2,2" VerticalAlignment="Center" Text="{Binding Path=ClientOrder.State}" IsEnabled="False"></TextBox>
+
+                    <TextBlock Grid.Column="0" Grid.Row="9" Margin="5" VerticalAlignment="Bottom" HorizontalAlignment="Right">Clinical Information:</TextBlock>
+                    <TextBox Grid.Column="1" Grid.Row="9" Margin="2,2,2,2" VerticalAlignment="Center" Text="{Binding Path=ClientOrder.ClinicalInformation}" IsEnabled="False"></TextBox>
+                </Grid>
+            </TabItem>
+        </TabControl>
+
+    </Grid>
+</UserControl>

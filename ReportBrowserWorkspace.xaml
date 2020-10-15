@@ -1,0 +1,91 @@
+﻿<UserControl x:Class="YPIConnect.ReportBrowserWorkspace"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:YPIConnect"
+             xmlns:Converter="clr-namespace:YPIConnect.Converter"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <Grid.Resources>
+            <Converter:MilitaryDateTimeConverter x:Key="MilitaryDateTimeConverter"/>
+            <Converter:ShortDateConverter x:Key="ShortDateConverter"/>
+        </Grid.Resources>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+        </Grid.RowDefinitions>
+
+        <ToolBarTray Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0" Background="Gainsboro" Name="ToolBarTrayMain">
+            
+        </ToolBarTray>
+
+        <TabControl Grid.Column="0" Grid.Row="1" Margin="2,2,2,2">
+            <TabItem Header="Acknowledgements">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                        <ColumnDefinition Width="Auto"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <ComboBox Name="CombboxCategorySearchType" Grid.Column="0" Grid.Row="0" Margin="2,2,2,2" IsEditable="False" Text="{Binding Path=CategortySearchType}" HorizontalAlignment="Stretch" BorderBrush="LightGray" BorderThickness="1">
+                        <ComboBoxItem>Recent Cases</ComboBoxItem>
+                        <ComboBoxItem>Not Acknowledged</ComboBoxItem>
+                    </ComboBox>
+                    <Button Grid.Column="1" Width="50" Height="25" Click="ButtonCategorySearchType_Click" Margin="2,2,2,2">Search</Button>
+                </Grid>
+            </TabItem>
+            
+            <TabItem Header="Patient Name">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                        <ColumnDefinition Width="Auto"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <TextBox Grid.Column="0" HorizontalAlignment="Stretch" Height="20" VerticalAlignment="Center" Text="{Binding Path=PatientNameSearch, UpdateSourceTrigger=PropertyChanged}" KeyUp="TextBoxPatientName_KeyUp" Margin="2,2,2,2"></TextBox>
+                    <Button Grid.Column="1" Width="50" Height="25" Click="ButtonPatientNameSearch_Click" Margin="2,2,2,2">Search</Button>
+                </Grid>
+            </TabItem>
+
+            <TabItem Header="Date Of Birth">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                        <ColumnDefinition Width="Auto"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <TextBox Grid.Column="0" HorizontalAlignment="Stretch" Height="20" VerticalAlignment="Center" Text="{Binding Path=DateOfBirthSearch, Converter={StaticResource ShortDateConverter}}" KeyUp="TextBoxDateOfBirthSearch_KeyUp" Margin="2,2,2,2"></TextBox>
+                    <Button Grid.Column="1" Width="50" Height="25" Click="ButtonDateOfBirthSearch_Click" Margin="2,2,2,2">Search</Button>
+                </Grid>
+            </TabItem>
+        </TabControl>
+
+        <ListView Name="ListViewReportDistributionLog" Margin="2,2,2,2" Grid.Column="0" Grid.Row="2" ItemsSource="{Binding Path=DistributionLog}" SelectionChanged="ListViewReportDistributionLog_SelectionChanged">
+            <ListView.View>
+                <GridView AllowsColumnReorder="True">
+                    <GridViewColumn DisplayMemberBinding="{Binding Path=ReportNo}" Header="Report No" Width="85"/>
+                    <GridViewColumn DisplayMemberBinding="{Binding Path=TimeOfLastDistribution, Converter={StaticResource MilitaryDateTimeConverter}}" Header="Date" Width="110"/>
+                    <GridViewColumn DisplayMemberBinding="{Binding Path=PFirstName}" Header="First" Width="85"/>
+                    <GridViewColumn DisplayMemberBinding="{Binding Path=PLastName}" Header="Last" Width="85"/>
+                    <GridViewColumn DisplayMemberBinding="{Binding Path=PBirthdate, Converter={StaticResource ShortDateConverter}}" Header="DOB" Width="85"/>
+                    <GridViewColumn DisplayMemberBinding="{Binding Path=ClientName}" Header="Name" Width="230"/>
+                    <GridViewColumn DisplayMemberBinding="{Binding Path=PhysicianName}" Header="Provider" Width="230"/>
+                </GridView>
+            </ListView.View>
+        </ListView>
+
+        <StatusBar Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="2" HorizontalAlignment="Stretch">
+            <StatusBarItem>
+                <TextBlock Margin="2" TextAlignment="Right" HorizontalAlignment="Stretch" VerticalAlignment="Center">User:</TextBlock>
+            </StatusBarItem>
+        </StatusBar>
+
+        <DocumentViewer Name="Viewer" Grid.Column="1" Grid.Row="0" Grid.RowSpan="4"></DocumentViewer>
+
+    </Grid>
+</UserControl>

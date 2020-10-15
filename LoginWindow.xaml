@@ -22,10 +22,10 @@
         <TextBox Grid.Column="1" Grid.Row="0" Margin="2,2,2,2" Text="{Binding Path=AuthenticatedUser.UserName}"></TextBox>
 
         <TextBlock Grid.Column="0" Grid.Row="1" Margin="2,2,2,2" Text="Password:" HorizontalAlignment="Right"></TextBlock>
-        <TextBox Grid.Column="1" Grid.Row="1" Margin="2,2,2,2" Text="{Binding Path=AuthenticatedUser.Password}"></TextBox>
+        <PasswordBox x:Name="PasswordBoxPassword" Grid.Column="1" Grid.Row="1" Margin="2,2,2,2"></PasswordBox>
 
         <TextBlock Grid.Column="0" Grid.Row="2" Margin="2,2,2,2" Text="Authenticator Code:" HorizontalAlignment="Right"></TextBlock>
-        <TextBox Grid.Column="1" Grid.Row="2" Margin="2,2,2,2" Text="{Binding Path=AuthenticatedUser.AuthenticatorToken}"></TextBox>
+        <TextBox Name="TextBoxAuthenticatorToken" Grid.Column="1" Grid.Row="2" Margin="2,2,2,2" Text="{Binding Path=AuthenticatedUser.AuthenticatorToken, UpdateSourceTrigger=PropertyChanged}" KeyUp="TextBoxAuthenticatorToken_KeyUp"></TextBox>
 
         <Button Grid.Column="1" Grid.Row="3" Width="100" Height="30" Click="ButtonLogin_Click" Margin="2,2,2,2" HorizontalAlignment="Right" VerticalAlignment="Bottom">Login</Button>
 

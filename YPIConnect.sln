@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.29709.97
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YPIConnect", "YPIConnect.csproj", "{A3C89D21-FC96-426E-9000-78E81F531717}"
 EndProject
-Project("{C7167F0D-BC9F-4E6E-AFE1-012C56B48DB5}") = "YPIConnect_Prod", "..\YPIConnect_Prod\YPIConnect_Prod.wapproj", "{E22B1458-A7FE-47A0-8FAC-C37302E19885}"
+Project("{C7167F0D-BC9F-4E6E-AFE1-012C56B48DB5}") = "YPIConnect_Prod", "..\ypi-connect-dist-prod\YPIConnect_Prod.wapproj", "{E22B1458-A7FE-47A0-8FAC-C37302E19885}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

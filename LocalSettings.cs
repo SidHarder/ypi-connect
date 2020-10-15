@@ -18,7 +18,9 @@ namespace YPIConnect
         private static LocalSettings m_Instance;
 
         private JObject m_JObject;
-        
+
+        private string m_EnvironmentName;
+        private bool m_SkipAuthentication;
         private string m_UserName;
         private string m_Password;
         private string m_QRCodeImage;
@@ -30,7 +32,13 @@ namespace YPIConnect
         }
 
         private void ReadPreferences()
-        {                        
+        {
+            if (this.m_JObject["environmentName"] != null)
+                this.m_EnvironmentName = this.m_JObject["environmentName"].ToString();
+
+            if (this.m_JObject["skipAuthentication"] != null)
+                this.m_SkipAuthentication = Convert.ToBoolean(this.m_JObject["skipAuthentication"].ToString());
+
             if (this.m_JObject["userName"] != null)
                 this.m_UserName = this.m_JObject["userName"].ToString();
 
@@ -77,7 +85,21 @@ namespace YPIConnect
             {
                 serializer.Serialize(writer, this.m_JObject);
             }
-        }                
+        }
+
+        public bool SkipAuthentication
+        {
+            get { return this.m_SkipAuthentication; }
+            set
+            {
+                if (this.m_SkipAuthentication != value)
+                {
+                    this.m_SkipAuthentication = value;
+                    this.m_JObject["skipAuthentication"] = this.m_SkipAuthentication;
+                    this.NotifyPropertyChanged("SkipAuthentication");
+                }
+            }
+        }
 
         public string Password
         {
@@ -89,6 +111,20 @@ namespace YPIConnect
                     this.m_Password = value;
                     this.m_JObject["password"] = this.m_Password;
                     this.NotifyPropertyChanged("Password");
+                }
+            }
+        }
+
+        public string EnvironmentName
+        {
+            get { return this.m_EnvironmentName; }
+            set
+            {
+                if (this.m_EnvironmentName != value)
+                {
+                    this.m_EnvironmentName = value;
+                    this.m_JObject["environmentName"] = this.m_Password;
+                    this.NotifyPropertyChanged("EnvironmentName");
                 }
             }
         }

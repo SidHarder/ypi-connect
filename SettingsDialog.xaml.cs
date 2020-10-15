@@ -70,7 +70,10 @@ namespace YPIConnect
 
         private void ButtonOK_Click(object sender, RoutedEventArgs e)
         {
-            this.m_LocalSettings.Serialize();
+            if(this.m_LocalSettings != null)
+            {
+                this.m_LocalSettings.Serialize();                
+            }
             this.Close();
         }
 
@@ -110,9 +113,9 @@ namespace YPIConnect
         private void HyperLinkGetQRCode_Click(object sender, RoutedEventArgs e)
         {
             JObject apiRequest = APIRequestHelper.GetQRCodeMessage(this.m_LocalSettings.UserName, this.m_LocalSettings.Password);
-            JObject apiResponse = APIRequestHelper.SubmitAPIRequestMessage(apiRequest);
+            APIResult apiResponse = APIRequestHelper.SubmitAPIRequestMessage(apiRequest);
 
-            string base64String = apiResponse["result"]["qrCodeImage"].ToString().Replace("data:image/png;base64,", string.Empty);
+            string base64String = apiResponse.JSONResult["result"]["qrCodeImage"].ToString().Replace("data:image/png;base64,", string.Empty);
             this.m_LocalSettings.QRCodeImage = base64String;
             this.m_LocalSettings.Serialize();
 
